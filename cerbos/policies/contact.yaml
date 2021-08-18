@@ -7,11 +7,13 @@ resourcePolicy:
   - actions: ["list"]
     roles:
       - admin
+      - user
     effect: EFFECT_ALLOW
 
   - actions: ["read"]
     roles:
       - admin
+      - user
     effect: EFFECT_ALLOW
 
   - actions: ["create"]
