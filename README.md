@@ -130,7 +130,7 @@ curl -X GET 'http://localhost:3000/contacts/abc123' \
 Allowed for `admin` role
 
 ```bash
-> curl -X POST 'http://localhost:3000/contacts/new' \
+curl -X POST 'http://localhost:3000/contacts/new' \
 --header 'Authorization: Bearer <token here>'
 ```
 
@@ -151,7 +151,7 @@ Should this request be made with the JWT roles set to `["user"]` the response wi
 Allowed for `admin` role only
 
 ```bash
-> curl -X PATCH 'http://localhost:3000/contacts/abc123' \
+curl -X PATCH 'http://localhost:3000/contacts/abc123' \
 --header 'Authorization: Bearer <token here>'
 ```
 
