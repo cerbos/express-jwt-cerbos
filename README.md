@@ -32,6 +32,8 @@ npm run start
 
 This example has a simple CRUD policy in place for a resource kind of `contact` - like a CRM system would have. The policy file can be found in the `cerbos/policies` folder [here](https://github.com/cerbos/express-jwt-cerbos/blob/main/cerbos/policies/contact.yaml).
 
+Should you wish to experiment with this policy, you can [try it in the Cerbos Playground](https://play.cerbos.dev/p/sZC611cf06deexP0q8CTcVufTVau1SA3).
+
 The policy expects one of two roles to be set on the principal - `admin` and `user`. These roles are authorized as follows:
 
 | Action | User | Admin |
