@@ -28,9 +28,23 @@ npm install
 npm run start
 ```
 
+## Policies
+
+This example has a simple CRUD policy in place for a resource kind of `contact` - like a CRM system would have.
+
+The policy expects one of two roles to be set on the principal - `admin` and `user`. These roles are authorized as follows:
+
+| Action | User | Admin |
+| ------ | ---- | ----- |
+| list   | Y    | Y     |
+| read   | Y    | Y     |
+| create | N    | Y     |
+| update | N    | Y     |
+| delete | N    | Y     |
+
 ## JWT Structure
 
-For this example a JWT needs to be generated to be passed in the authorization header. The token structure is as follows:
+For this example a JWT needs to be generated to be passed in the authorization header. The payload of the token contains an array of roles which are passed into Cerbos to use for authorization - the structure is as follows:
 
 ```
 {
@@ -46,6 +60,48 @@ For this example a JWT needs to be generated to be passed in the authorization h
 **Note:** The secret is hardcoded in this example to `yoursecret` and the algorithm is `HS256`.
 
 ![JWT.io](/docs/jwt-token.png)
+
+## Request Flow
+
+1. HTTP request comes in and the `express-jwt` library validates the token and adds the payload to `req.user`.
+2. The contents of the JWT token is mapped to the structure of the principal object required by Cerbos
+
+```js
+// Extract data from the JWT (check DB etc) and create the principal object to be sent to Cerbos
+const jwtToPrincipal = ({ sub, iat, roles = [], ...rest }) => {
+  return {
+    id: sub,
+    roles,
+    attr: rest,
+  };
+};
+```
+
+3. Fetch the data required about the resource being accessed from the data store
+4. Call the Cerbos PDP with the principal, resource and action to check the authorization and then return an error if the user is not authorized:
+
+```js
+const allowed = await cerbos.check({
+  principal: jwtToPrincipal(req.user),
+  resource: {
+    kind: "contact",
+    instances: {
+      //a map of the resource(s) being accessed
+      [contact.id]: {
+        attr: contact,
+      },
+    },
+  },
+  actions: ["read"], //the list of actions being performed
+});
+
+// not authorized for read action
+if (!allowed.isAuthorized(contact.id, "read")) {
+  return res.status(403).json({ error: "Unauthorized" });
+}
+```
+
+5. Serve the response if authorized
 
 ## Example Requests
 
@@ -116,7 +172,7 @@ Should this request be made with the JWT roles set to `["user"]` the response wi
 Allowed for `admin` role only
 
 ```bash
-> curl -X DELETE 'http://localhost:3000/contacts/abc123' \
+curl -X DELETE 'http://localhost:3000/contacts/abc123' \
 --header 'Authorization: Bearer <token here>'
 ```
 
@@ -131,45 +187,3 @@ Should this request be made with the JWT roles set to `["user"]` the response wi
 ```json
 { "error": "Unauthorized" }
 ```
-
-## Request Flow
-
-1. HTTP request comes in and the `express-jwt` library validates the token
-2. The contents of the JWT token is mapped to the structure of the principal object required by Cerbos
-
-```js
-// Extract data from the JWT (check DB etc) and create the principal object to be sent to Cerbos
-const jwtToPrincipal = ({ sub, iat, roles = [], ...rest }) => {
-  return {
-    id: sub,
-    roles,
-    attr: rest,
-  };
-};
-```
-
-3. Fetch the data required about the resource being accessed from the data store
-4. Call the Cerbos PDP with the principal, resource and action to check the authorization and then return an error if the user is not authorized:
-
-```js
-const allowed = await cerbos.check({
-  principal: jwtToPrincipal(req.user),
-  resource: {
-    kind: "contact",
-    instances: {
-      //a map of the resource(s) being accessed
-      [contact.id]: {
-        attr: contact,
-      },
-    },
-  },
-  actions: ["read"], //the list of actions being performed
-});
-
-// not authorized for read action
-if (!allowed.isAuthorized(contact.id, "read")) {
-  return res.status(403).json({ error: "Unauthorized" });
-}
-```
-
-5. Serve the response if authorized
