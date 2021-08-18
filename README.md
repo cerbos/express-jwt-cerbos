@@ -127,7 +127,7 @@ curl -X GET 'http://localhost:3000/contacts/abc123' \
 
 ### Create a contact
 
-Allowed for `admin` role
+Allowed for `admin` role only
 
 ```bash
 curl -X POST 'http://localhost:3000/contacts/new' \
