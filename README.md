@@ -57,7 +57,7 @@ For this example a JWT needs to be generated to be passed in the authorization h
 
 [JWT.io](https://jwt.io) can be used generate a token for testing purposes - an [example is here](https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicm9sZXMiOlsiYWRtaW4iXSwiaWF0IjoxNTE2MjM5MDIyfQ.CQEEaSdswE2tou7MUeSe4-6kfe1imJXnbqhiMFsF13A).
 
-**Note:** The secret is hardcoded in this example to `yoursecret` and the algorithm is `HS256`.
+**Note:** The secret is hardcoded in this example to `yoursecret` and the algorithm is `HS256` - you will need to set these for the signature to be valid.
 
 ![JWT.io](/docs/jwt-token.png)
 
