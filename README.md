@@ -78,7 +78,7 @@ const jwtToPrincipal = ({ sub, iat, roles = [], ...rest }) => {
 ```
 
 3. Fetch the data required about the resource being accessed from the data store
-4. Call the Cerbos PDP with the principal, resource and action to check the authorization and then return an error if the user is not authorized:
+4. Call the Cerbos PDP with the principal, resource and action to check the authorization and then return an error if the user is not authorized. The [Cerbos package](https://www.npmjs.com/package/cerbos) is used for this.
 
 ```js
 const allowed = await cerbos.check({
