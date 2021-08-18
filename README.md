@@ -34,6 +34,8 @@ This example has a simple CRUD policy in place for a resource kind of `contact` 
 
 Should you wish to experiment with this policy, you can [try it in the Cerbos Playground](https://play.cerbos.dev/p/sZC611cf06deexP0q8CTcVufTVau1SA3).
 
+[<img src="docs/launch.jpg" height="48">](https://play.cerbos.dev/p/sZC611cf06deexP0q8CTcVufTVau1SA3)
+
 The policy expects one of two roles to be set on the principal - `admin` and `user`. These roles are authorized as follows:
 
 | Action | User | Admin |
