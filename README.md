@@ -50,7 +50,7 @@ For this example a JWT needs to be generated to be passed in the authorization h
 {
   sub: string,
   name: string,
-  iat: nunber,
+  iat: number,
   roles: string[] // "user" and "admin" supported in this demo
 }
 ```
