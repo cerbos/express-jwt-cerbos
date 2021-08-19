@@ -30,7 +30,10 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
 
   // check user is authorized
   const allowed = await cerbos.check({
-    principal: jwtToPrincipal(req.user),
+    principal: {
+      id: req.user.sub,
+      roles: req.user.roles,
+    },
     resource: {
       kind: "contact",
       instances: {
@@ -54,7 +57,10 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
 app.post("/contacts/new", checkJwt, async (req, res) => {
   // check user is authorized
   const allowed = await cerbos.check({
-    principal: jwtToPrincipal(req.user),
+    principal: {
+      id: req.user.sub,
+      roles: req.user.roles,
+    },
     resource: {
       kind: "contact",
       instances: {
@@ -80,7 +86,10 @@ app.patch("/contacts/:id", checkJwt, async (req, res) => {
   }
 
   const allowed = await cerbos.check({
-    principal: jwtToPrincipal(req.user),
+    principal: {
+      id: req.user.sub,
+      roles: req.user.roles,
+    },
     resource: {
       kind: "contact",
       instances: {
@@ -109,7 +118,10 @@ app.delete("/contacts/:id", checkJwt, async (req, res) => {
   }
 
   const allowed = await cerbos.check({
-    principal: jwtToPrincipal(req.user),
+    principal: {
+      id: req.user.sub,
+      roles: req.user.roles,
+    },
     resource: {
       kind: "contact",
       instances: {
@@ -137,7 +149,10 @@ app.get("/contacts", checkJwt, async (req, res) => {
 
   // check user is authorized
   const allowed = await cerbos.check({
-    principal: jwtToPrincipal(req.user),
+    principal: {
+      id: req.user.sub,
+      roles: req.user.roles,
+    },
     resource: {
       kind: "contact",
       instances: contacts.reduce(function (result, item, index, array) {
