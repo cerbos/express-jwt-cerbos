@@ -1,32 +1,16 @@
 ---
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
-  version: "default"
+  version: default
   resource: contact
   rules:
-  - actions: ["list"]
+  - actions: ["read", "list"]
     roles:
       - admin
       - user
     effect: EFFECT_ALLOW
 
-  - actions: ["read"]
-    roles:
-      - admin
-      - user
-    effect: EFFECT_ALLOW
-
-  - actions: ["create"]
-    roles:
-      - admin
-    effect: EFFECT_ALLOW
-
-  - actions: ["update"]
-    roles:
-      - admin
-    effect: EFFECT_ALLOW
-
-  - actions: ["delete"]
+  - actions: ["create", "update", "delete"]
     roles:
       - admin
     effect: EFFECT_ALLOW

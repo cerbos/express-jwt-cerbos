@@ -42,13 +42,12 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
     actions: ["read"],
   });
 
-  // not authorized for read action
-  if (!allowed.isAuthorized(contact.id, "read")) {
+  // authorized for read action
+  if (allowed.isAuthorized(contact.id, "read")) {
+    return res.json(contact);
+  } else {
     return res.status(403).json({ error: "Unauthorized" });
   }
-
-  // return the contact
-  return res.json(contact);
 });
 
 // CREATE
@@ -65,13 +64,12 @@ app.post("/contacts/new", checkJwt, async (req, res) => {
     actions: ["create"],
   });
 
-  // not authorized for create action
-  if (!allowed.isAuthorized("new", "create")) {
+  // authorized for create action
+  if (allowed.isAuthorized("new", "create")) {
+    return res.json({ result: "Created contact" });
+  } else {
     return res.status(403).json({ error: "Unauthorized" });
   }
-
-  // return the contact
-  return res.json({ result: "Created contact" });
 });
 
 // UPDATE
@@ -94,14 +92,13 @@ app.patch("/contacts/:id", checkJwt, async (req, res) => {
     actions: ["update"],
   });
 
-  if (!allowed.isAuthorized(req.params.id, "update")) {
-    res.status(403).json({ error: "Unauthorized" });
-    return;
+  if (allowed.isAuthorized(req.params.id, "update")) {
+    return res.json({
+      result: `Updated contact ${req.params.id}`,
+    });
+  } else {
+    return res.status(403).json({ error: "Unauthorized" });
   }
-
-  return res.json({
-    result: `Updated contact ${req.params.id}`,
-  });
 });
 
 // DELETE
@@ -124,14 +121,13 @@ app.delete("/contacts/:id", checkJwt, async (req, res) => {
     actions: ["delete"],
   });
 
-  if (!allowed.isAuthorized(req.params.id, "delete")) {
-    res.status(403).json({ error: "Unauthorized" });
-    return;
+  if (allowed.isAuthorized(req.params.id, "delete")) {
+    return res.json({
+      result: `Contact ${req.params.id} deleted`,
+    });
+  } else {
+    return res.status(403).json({ error: "Unauthorized" });
   }
-
-  return res.json({
-    result: `Contact ${req.params.id} deleted`,
-  });
 });
 
 // LIST
