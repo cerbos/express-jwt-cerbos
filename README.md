@@ -5,7 +5,7 @@ An example application of integrating [Cerbos](https://cerbos.dev) with an [Expr
 ## Dependencies
 
 - Node.js
-- Docker for running the [Cerbos Policy Decision Point (PDP)](https://docs.cerbos.dev/cerbos/installation/container.html)
+- Docker for running the [Cerbos Policy Decision Point (PDP)](https://docs.cerbos.dev/cerbos/0.6.0/installation/container.html)
 
 ## Getting Started
 
