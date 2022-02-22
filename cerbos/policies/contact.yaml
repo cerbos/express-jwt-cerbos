@@ -9,6 +9,7 @@ resourcePolicy:
     roles:
       - admin
       - user
+      
 
   - actions: ["update", "delete"]
     effect: EFFECT_ALLOW

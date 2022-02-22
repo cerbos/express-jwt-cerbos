@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "express-jwt";
 
-import { Cerbos } from "cerbos";
+import { Cerbos } from "@cerbos/sdk";
 import db from "./db.js";
 
 const cerbos = new Cerbos({
