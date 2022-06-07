@@ -14,7 +14,7 @@ const jwtToPrincipal = ({ sub, iat, roles = [], ...rest }) => {
   return {
     id: sub,
     roles,
-    attr: rest,
+    attributes: rest,
   };
 };
 
@@ -31,11 +31,8 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
-      instances: {
-        [contact.id]: {
-          attr: contact,
-        },
-      },
+      id: contact.id,
+      attributes: contact,
     },
     actions: ["read"],
   });
@@ -55,9 +52,7 @@ app.post("/contacts/new", checkJwt, async (req, res) => {
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
-      instances: {
-        new: {},
-      },
+      id: "new",
     },
     actions: ["create"],
   });
@@ -81,11 +76,8 @@ app.patch("/contacts/:id", checkJwt, async (req, res) => {
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
-      instances: {
-        [contact.id]: {
-          attr: contact,
-        },
-      },
+      id: contact.id,
+      attributes: contact,
     },
     actions: ["update"],
   });
@@ -110,11 +102,8 @@ app.delete("/contacts/:id", checkJwt, async (req, res) => {
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
-      instances: {
-        [contact.id]: {
-          attr: contact,
-        },
-      },
+      id: contact.id,
+      attributes: contact,
     },
     actions: ["delete"],
   });
