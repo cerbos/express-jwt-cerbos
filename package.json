@@ -12,9 +12,9 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "cerbos": "^0.0.2",
+    "@cerbos/grpc": "^0.5.1",
     "express": "^4.17.1",
-    "express-jwt": "^6.1.0"
+    "express-jwt": "^6.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

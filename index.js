@@ -1,12 +1,10 @@
 import express from "express";
 import jwt from "express-jwt";
 
-import { Cerbos } from "cerbos";
+import { GRPC } from "@cerbos/grpc";
 import db from "./db.js";
 
-const cerbos = new Cerbos({
-  hostname: "http://localhost:3592", // The Cerbos PDP instance
-});
+const cerbos = new GRPC("localhost:3593", { tls: false });
 
 const app = express();
 const checkJwt = jwt({ secret: "yoursecret", algorithms: ["HS256"] });
@@ -29,7 +27,7 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
   }
 
   // check user is authorized
-  const allowed = await cerbos.check({
+  const decision = await cerbos.checkResource({
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
@@ -43,7 +41,7 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
   });
 
   // authorized for read action
-  if (allowed.isAuthorized(contact.id, "read")) {
+  if (decision.isAllowed("read")) {
     return res.json(contact);
   } else {
     return res.status(403).json({ error: "Unauthorized" });
@@ -53,7 +51,7 @@ app.get("/contacts/:id", checkJwt, async (req, res) => {
 // CREATE
 app.post("/contacts/new", checkJwt, async (req, res) => {
   // check user is authorized
-  const allowed = await cerbos.check({
+  const decision = await cerbos.checkResource({
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
@@ -65,7 +63,7 @@ app.post("/contacts/new", checkJwt, async (req, res) => {
   });
 
   // authorized for create action
-  if (allowed.isAuthorized("new", "create")) {
+  if (decision.isAllowed("create")) {
     return res.json({ result: "Created contact" });
   } else {
     return res.status(403).json({ error: "Unauthorized" });
@@ -79,7 +77,7 @@ app.patch("/contacts/:id", checkJwt, async (req, res) => {
     return res.status(404).json({ error: "Contact not found" });
   }
 
-  const allowed = await cerbos.check({
+  const decision = await cerbos.checkResource({
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
@@ -92,7 +90,7 @@ app.patch("/contacts/:id", checkJwt, async (req, res) => {
     actions: ["update"],
   });
 
-  if (allowed.isAuthorized(req.params.id, "update")) {
+  if (allowed.isAllowed("update")) {
     return res.json({
       result: `Updated contact ${req.params.id}`,
     });
@@ -108,7 +106,7 @@ app.delete("/contacts/:id", checkJwt, async (req, res) => {
     return res.status(404).json({ error: "Contact not found" });
   }
 
-  const allowed = await cerbos.check({
+  const decision = await cerbos.checkResource({
     principal: jwtToPrincipal(req.user),
     resource: {
       kind: "contact",
@@ -121,7 +119,7 @@ app.delete("/contacts/:id", checkJwt, async (req, res) => {
     actions: ["delete"],
   });
 
-  if (allowed.isAuthorized(req.params.id, "delete")) {
+  if (decision.isAllowed("delete")) {
     return res.json({
       result: `Contact ${req.params.id} deleted`,
     });
@@ -136,20 +134,25 @@ app.get("/contacts", checkJwt, async (req, res) => {
   const contacts = db.find(req.params.id);
 
   // check user is authorized
-  const allowed = await cerbos.check({
+  const decision = await cerbos.checkResources({
     principal: jwtToPrincipal(req.user),
-    resource: {
-      kind: "contact",
-      instances: contacts.reduce(function (result, item, index, array) {
-        result[item.id] = item; //a, b, c
-        return result;
-      }, {}),
-    },
-    actions: ["list"],
+    resources: contacts.map((contact) => ({
+      resource: {
+        kind: "contact",
+        id: contact.id,
+        attributes: contact,
+      },
+      actions: ["list"],
+    })),
   });
 
   // filter only those authorised
-  const result = contacts.filter((c) => allowed.isAuthorized(c.id, "list"));
+  const result = contacts.filter((c) =>
+    decision.isAllowed({
+      resource: { kind: "contact", id: c.id },
+      action: "list",
+    })
+  );
 
   // return the contact
   return res.json(result);
