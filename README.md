@@ -85,24 +85,26 @@ const jwtToPrincipal = ({ sub, iat, roles = [], ...rest }) => {
 4. Call the Cerbos PDP with the principal, resource and action to check the authorization and then return an error if the user is not authorized. The [Cerbos package](https://www.npmjs.com/package/cerbos) is used for this.
 
 ```js
-const allowed = await cerbos.check({
+const decision = await cerbos.checkResource({
   principal: jwtToPrincipal(req.user),
   resource: {
     kind: "contact",
     instances: {
-      //a map of the resource(s) being accessed
       [contact.id]: {
         attr: contact,
       },
     },
   },
-  actions: ["read"], //the list of actions being performed
+  actions: ["read"],
 });
 
-// not authorized for read action
-if (!allowed.isAuthorized(contact.id, "read")) {
+// authorized for read action
+if (decision.isAllowed("read")) {
+  return res.json(contact);
+} else {
   return res.status(403).json({ error: "Unauthorized" });
 }
+
 ```
 
 5. Serve the response if authorized
