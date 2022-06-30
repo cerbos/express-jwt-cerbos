@@ -1,10 +1,10 @@
 import express from "express";
 import jwt from "express-jwt";
 
-import { GRPC } from "@cerbos/grpc";
+import { GRPC as Cerbos } from "@cerbos/grpc";
 import db from "./db.js";
 
-const cerbos = new GRPC("localhost:3593", { tls: false });
+const cerbos = new Cerbos("localhost:3593", { tls: false });
 
 const app = express();
 const checkJwt = jwt({ secret: "yoursecret", algorithms: ["HS256"] });
