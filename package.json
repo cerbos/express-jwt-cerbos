@@ -13,7 +13,7 @@
   "type": "module",
   "dependencies": {
     "@cerbos/grpc": "^0.5.1",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "express-jwt": "^6.1.2"
   },
   "devDependencies": {
