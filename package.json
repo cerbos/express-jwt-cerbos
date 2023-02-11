@@ -17,6 +17,6 @@
     "express-jwt": "^6.1.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.20"
   }
 }
