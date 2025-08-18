@@ -12,7 +12,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@cerbos/grpc": "^0.22.0",
+    "@cerbos/grpc": "^0.23.0",
     "express": "^4.18.2",
     "express-jwt": "^8.3.0"
   },
